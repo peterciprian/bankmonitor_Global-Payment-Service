@@ -95,13 +95,22 @@ npm test
 
 Task 8 uses `react-hook-form`, `zod`, `@hookform/resolvers`, and `msw`; these are installed in `frontend/package.json`. No additional environment variables are required.
 
+### Task 9 — Transfer Screen
+The transfer screen is available at `/transfer`. It preserves one `X-Idempotency-Key` UUID across network failures, HTTP 503 responses, and retries, then rotates the key only after HTTP 201 success. Inputs lock during submission, conflicts show a warning, and retryable failures preserve the form and key.
+
+Run the Playwright E2E test from `frontend/`:
+```bash
+npm run test:e2e
+```
+The first Playwright run may require `npx playwright install chromium` to install the local browser.
+
 ### Next.js mock backend
 Until the Spring Boot backend is available, the frontend provides server-side App Router mock endpoints backed by a `globalThis` singleton:
 - `GET/POST /api/accounts`
 - `POST /api/transfers` with strict `X-Idempotency-Key` handling
 - `GET /api/transactions?page=1&limit=10`
 
-The store starts with deterministic sample accounts and persists across normal development-mode HMR reloads. Its data resets when the Next.js process restarts. Same-currency transfers succeed; cross-currency transfers use a fixed 2-second delay and return HTTP 503 to make resilience behavior deterministic.
+The store starts with deterministic sample accounts and persists across normal development-mode HMR reloads. Its data resets when the Next.js process restarts. Same-currency transfers succeed immediately; cross-currency transfers use a fixed 2-second delay and deterministic rates (`EUR/USD 1.08`, `EUR/HUF 395`, `USD/HUF 366`, with inverse rates defined explicitly), then debit the source amount and credit the converted target amount. The simulator also retains an explicit fixed-503 helper for isolated resilience-failure tests.
 
 The frontend production build can be checked with `npm run build` from the `frontend/` directory.
 
@@ -123,6 +132,10 @@ frontend/
     accounts/
       page.tsx
       page.test.tsx
+      transfer/
+        page.tsx
+      src/hooks/useTransfers.ts
+      src/__tests__/transfer.e2e.test.ts
   src/components/CreateAccountDialog.tsx
   src/hooks/useAccounts.ts
 ```

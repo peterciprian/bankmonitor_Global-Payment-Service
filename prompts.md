@@ -132,4 +132,26 @@ Once I give the confirmation, the scope of the implementation will cover:
 - `src/app/api/transactions/route.ts`:
   - `GET`: Returns the list of executed transfers with support for basic pagination query parameters (`page`, `limit`).
 
+6. Act as a UX Architect and Frontend Security Engineer. We are ready to implement "Task 9: Transfer Screen with Idempotency Form + Playwright E2E Network Failure Test" as defined in #file:backlog.md, adhering to #file:system-requirements.md and #file:testing-guidelines.md.
+
+We will connect this screen directly to our newly created server-side Route Handlers (`/api/transfers` and `/api/accounts`).
+
+CRITICAL INSTRUCTION ON TECHNICAL DECISIONS:
+Before generating the implementation, analyze the following architectural questions. Stop and present your recommendations, tradeoffs, and edge-case behaviors for:
+1. Idempotency Key Management: How should we store and manage the UUID `X-Idempotency-Key` in the React/Next.js state? It must persist across component re-renders and network retries, but strictly rotate to a brand new UUID only upon a successful 201 Created transaction. Should we use a combination of useState/useRef or track it inside the React Query mutation context?
+2. Form UX and Locking: When a request is in-flight (isPending), or when the mock server returns a 409 Conflict, how should the UI react (e.g., disable specific inputs, show a global Backdrop loader, or display an intuitive MUI Alert with a countdown)?
+Present the options and wait for my confirmation.
+
+Once I confirm, the scope of the implementation will cover:
+- `src/hooks/useTransfers.ts`: TanStack React Query mutation (`useCreateTransfer`) that captures the transfer payload and explicitly attaches the active `X-Idempotency-Key` string to the request headers.
+- `src/app/transfer/page.tsx`: The full Transfer form page using Material UI components (`TextField`, `Select` for currency, and dropdowns populated with accounts from `/api/accounts`).
+- Comprehensive error and success handling:
+  - On HTTP 409 Conflict: Show an MUI Alert indicating the transaction is already being processed. Protect the form from double submission.
+  - On HTTP 503 / General Network Failure: Show a prominent error state with a clear 'Retry' button that preserves the *exact same* key.
+  - On HTTP 201 Created: Show a success screen, trigger a data refetch for account balances, and automatically generate a *new* UUID key for the next transfer.
+- `src/__tests__/transfer.e2e.test.ts`: A Playwright E2E test file that intercepts the `/api/transfers` POST request. On the first click of 'Submit', it aborts the network connection. It asserts the UI shows a retry mechanism. On the second click (Retry), it allows a successful 201 response and asserts that the `X-Idempotency-Key` header value was identical in both requests.
+
+DOCUMENTATION UPDATE:
+Provide any necessary additions to #file:README.md regarding how to run the newly added Playwright E2E tests locally.
+
 

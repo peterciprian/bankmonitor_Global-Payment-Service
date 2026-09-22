@@ -14,8 +14,12 @@
 - **Reasoning:** The current accounts list needs semantic, responsive tabular rendering without the bundle and operational complexity of `@mui/x-data-grid`. React Hook Form and Zod provide typed field validation with a small, extensible form surface.
 
 ### Next.js mock backend choice
-- **Decision:** Use a typed `globalThis` singleton with seeded mock accounts, transactions, and idempotency records. Use an always-fixed FX simulation with a 2-second delay and HTTP 503 for cross-currency transfers.
-- **Reasoning:** The singleton survives normal development HMR reloads without adding infrastructure. Fixed simulation behavior keeps local manual testing and automated tests deterministic while still exercising the retry/error path.
+- **Decision:** Use a typed `globalThis` singleton with seeded mock accounts, transactions, and idempotency records. Use deterministic exchange rates with a 2-second cross-currency delay, plus a separate explicit fixed-503 helper for failure tests.
+- **Reasoning:** The singleton survives normal development HMR reloads without adding infrastructure. Successful conversion is needed for the normal transfer flow, while the separate failure helper preserves deterministic resilience testing without making every FX transfer fail.
+
+### Task 9 implementation choice
+- **Decision:** Store the active idempotency UUID in page-owned React state, preserve it for retries and failures, and rotate it only after HTTP 201 success. Lock form inputs during mutation and expose explicit retry handling for network failures and 503 responses.
+- **Reasoning:** State makes the key lifecycle explicit and testable while ensuring re-renders do not change it. UI locking prevents duplicate submits, and explicit retry preserves the server's idempotency contract.
 
 ## 2. Pessimistic Locking over Optimistic Locking
 - **Context:** High-concurrency financial ledger updates on account balances.

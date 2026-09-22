@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { simulateFixedFxFailure } from '../../../lib/mock-simulation';
+import { simulateExchange } from '../../../lib/mock-simulation';
 import { mockStore } from '../../../lib/mock-store';
 
 type TransferRequest = {
@@ -40,24 +40,25 @@ export async function POST(request: Request) {
 
   mockStore.idempotencyKeys.set(idempotencyKey, { status: 'PROCESSING', responseStatus: 201 });
 
-  if (fromAccount.currency !== toAccount.currency) {
-    const failure = await simulateFixedFxFailure();
-    mockStore.idempotencyKeys.set(idempotencyKey, {
-      status: 'FAILED',
-      responseStatus: failure.status,
-      responseBody: { message: failure.message }
-    });
-    return NextResponse.json({ message: failure.message }, { status: failure.status });
-  }
-
+  const exchange = fromAccount.currency === toAccount.currency
+    ? {
+        rate: 1,
+        convertedAmount: amount,
+        fromCurrency: fromAccount.currency,
+        toCurrency: toAccount.currency
+      }
+    : await simulateExchange(amount, fromAccount.currency, toAccount.currency);
   fromAccount.balance -= amount;
-  toAccount.balance += amount;
+  toAccount.balance += exchange.convertedAmount;
   const transaction = {
     id: crypto.randomUUID(),
     fromAccountId: fromAccount.id,
     toAccountId: toAccount.id,
     amount,
     currency: fromAccount.currency,
+    convertedAmount: exchange.convertedAmount,
+    targetCurrency: toAccount.currency,
+    exchangeRate: exchange.rate,
     createdAt: new Date().toISOString()
   };
   mockStore.transactions.unshift(transaction);
