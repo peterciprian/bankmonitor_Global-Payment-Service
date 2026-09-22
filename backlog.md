@@ -1,6 +1,6 @@
 # Project Backlog & Copilot Prompts (Implementation + Testing Integrated)
 
-- [ ] Task 1: Backend Domain Models & Repository with Pessimistic Locking + Unit Tests
+- [x] Task 1: Backend Domain Models & Repository with Pessimistic Locking + Unit Tests
 - [ ] Task 2: Idempotency Engine, Database Status Machine + Integration Tests
 - [ ] Task 3: Transfer Service with Deadlock Prevention + Real PostgreSQL Concurrency Tests
 - [ ] Task 4: Resilient FX External Client with Resilience4j + Integration Mock Tests

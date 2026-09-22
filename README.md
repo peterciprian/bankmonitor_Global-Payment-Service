@@ -36,6 +36,19 @@ If this were a full development sprint instead of a 10–12 hour MVP, we would i
 
 ---
 
+## Current Implementation Status
+
+### Task 1 — Backend Domain Models, Locking & Unit Tests
+Completed in this workspace:
+- `Account` JPA entity with validation and balance mutation rules
+- `Transfer` JPA entity and `TransferStatus` state model
+- `AccountRepository.findByIdForUpdate` using `@Lock(LockModeType.PESSIMISTIC_WRITE)`
+- `AccountTest` covering valid debit/credit behavior, negative/zero validation, and insufficient-funds failure cases
+
+> Verification note: the workspace has no Java/Maven toolchain available in this environment, so a real `mvn test` run could not be executed here. The editor reports no Java syntax errors in the generated files.
+
+---
+
 ## How to Build, Run, and Test
 
 ### Running the Backend
