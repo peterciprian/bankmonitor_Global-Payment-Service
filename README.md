@@ -93,7 +93,19 @@ npm run dev
 npm test
 ```
 
-Task 8 uses `react-hook-form`, `zod`, `@hookform/resolvers`, and `msw`; these are installed in `frontend/package.json`. No additional environment variables are required.
+### Task 6 — Backend REST boundary
+The backend controller-first boundary is implemented under `backend/`:
+- `POST /api/transfers` with `X-Idempotency-Key` interception
+- `GET /api/accounts`
+- `GET /api/transactions?page=1&limit=10`
+- Bean-validated transfer DTOs and cached idempotency responses
+- `@WebMvcTest` coverage for missing keys, invalid payloads, `PROCESSING`, and cached `SUCCESS`
+
+The backend tests require Maven and Java 21. Maven is not installed in the current development environment, so they could not be executed here.
+### Task 7 — Frontend Boilerplate
+The frontend boilerplate is implemented under `frontend/`.
+
+### Task 8 uses `react-hook-form`, `zod`, `@hookform/resolvers`, and `msw`; these are installed in `frontend/package.json`. No additional environment variables are required.
 
 ### Task 9 — Transfer Screen
 The transfer screen is available at `/transfer`. It preserves one `X-Idempotency-Key` UUID across network failures, HTTP 503 responses, and retries, then rotates the key only after HTTP 201 success. Inputs lock during submission, conflicts show a warning, and retryable failures preserve the form and key.
@@ -106,6 +118,7 @@ The first Playwright run may require `npx playwright install chromium` to instal
 
 ### Task 10 — Transaction History
 The transaction history screen is available at `/transactions`. It uses the mock `GET /api/transactions?page=1&limit=10` endpoint, which returns a `{ data, pagination }` envelope containing `totalItems`, `totalPages`, `currentPage`, and `pageSize`. The frontend uses a standard MUI `Table` with `TablePagination` and preserves the previous page while loading the next page.
+
 
 ### Next.js mock backend
 Until the Spring Boot backend is available, the frontend provides server-side App Router mock endpoints backed by a `globalThis` singleton:

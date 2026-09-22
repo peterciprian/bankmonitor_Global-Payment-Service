@@ -25,6 +25,10 @@
 - **Decision:** Return transactions in a `{ data, pagination }` envelope and use MUI `Table` with `TablePagination` rather than `@mui/x-data-grid`.
 - **Reasoning:** Explicit server pagination metadata keeps the API contract ready for the real backend. The standard table is sufficient for the current ledger, preserves bundle size, and provides direct control over accessible responsive rendering.
 
+### Task 6 implementation choice
+- **Decision:** Use a Spring MVC `HandlerInterceptor` for `X-Idempotency-Key` enforcement and Bean Validation annotations on controller DTO records.
+- **Reasoning:** The interceptor can return `400`, `409`, or a cached `201` response before the business service is invoked. `@Valid` with `@NotNull`, `@Positive`, and `@Digits` keeps malformed transfer requests out of the service layer while remaining straightforward to verify with `@WebMvcTest`.
+
 ## 2. Pessimistic Locking over Optimistic Locking
 - **Context:** High-concurrency financial ledger updates on account balances.
 - **Decision:** Used `@Lock(LockModeType.PESSIMISTIC_WRITE)` (`SELECT FOR UPDATE`).

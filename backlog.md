@@ -5,7 +5,7 @@
 - [ ] Task 3: Transfer Service with Deadlock Prevention + Real PostgreSQL Concurrency Tests
 - [ ] Task 4: Resilient FX External Client with Resilience4j + Integration Mock Tests
 - [ ] Task 5: Transactional Outbox Pattern implementation + Scheduler Integration Tests
-- [ ] Task 6: REST Controller & Idempotency Filter + WebMvc Spring Tests
+- [x] Task 6: REST Controller & Idempotency Filter + WebMvc Spring Tests
 - [x] Task 7: Next.js 15 Boilerplate with MUI v6 & Styled Components + SSR Hydration Smoke Test
 - [x] Task 8: Accounts Dashboard Screen + Component Tests (MUI + MSW)
 - [x] Task 9: Transfer Screen with Idempotency Form + Playwright E2E Network Failure Test

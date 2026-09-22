@@ -173,3 +173,28 @@ Once I confirm, the scope of the implementation will cover:
 
 DOCUMENTATION UPDATE:
 Verify if #file:README.md requires any updates regarding running or testing this final frontend + mock layer.
+
+8. Act as a Principal Spring Boot Architect. We are continuing our engineering workflow by implementing the REST Controller layer BEFORE the core business logic (Controller-First / API-First approach). 
+
+Please read, analyze, and strictly follow these source-of-truth files:
+1. #file:system-requirements.md
+2. #file:testing-guidelines.md
+3. #file:backlog.md (Focusing on "Task 6: REST Controller & Idempotency Filter + WebMvc Spring Tests")
+
+CRITICAL INSTRUCTION ON TECHNICAL DECISIONS:
+Before generating the code, stop and present your recommendations, tradeoffs, and architectural approaches for:
+1. Idempotency Key Interception: Should we intercept the `X-Idempotency-Key` header using a Spring MVC `HandlerInterceptor`, a Servlet `Filter`, or directly inside the Controller method using `@RequestHeader`? How does this choice impact our ability to return a 409 Conflict before hitting the business transaction?
+2. DTO and Validation Validation Framework: What annotations should we use to validate incoming payment payloads (e.g., negative amounts, empty account numbers) right at the boundary layer?
+Present the options and wait for my confirmation.
+
+Once I confirm, the scope of the implementation will cover:
+- All incoming/outgoing DTO classes (`TransferRequest`, `TransferResponse`, `AccountResponse`).
+- `TransferController` handling `POST /api/transfers`, `GET /api/transactions`, and `GET /api/accounts`. For now, inject stubbed or mocked service interfaces so the controllers can compile.
+- The Idempotency validation mechanism (Filter/Interceptor) that enforces the presence of `X-Idempotency-Key` (returns 400 if missing).
+- `TransferControllerTest` using Spring Boot's `@WebMvcTest`. It must strictly verify the Web boundary layer without loading the database or real business services:
+  1. Missing header returns 400 Bad Request.
+  2. Invalid payload (e.g., negative amount) returns 400 Bad Request.
+  3. A key currently in `PROCESSING` returns 409 Conflict.
+  4. A key in `SUCCESS` returns the cached response directly.
+
+Let's begin with the technical choices. What are your architectural recommendations for intercepting the idempotency key and structuring the DTO validations?
