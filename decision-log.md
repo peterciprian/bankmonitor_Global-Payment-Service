@@ -5,6 +5,10 @@
 - **Decision:** Chosen Next.js for structural scalability and SEO/SSR readiness, paired with MUI for comprehensive accessibility (WAI-ARIA compliance) and Styled Components for isolated, dynamic component styling.
 - **Consequences:** Requires careful configuration of the Next.js registry to handle CSS-in-JS injection during server-side rendering to avoid layout shifts.
 
+### Task 7 implementation choice
+- **Decision:** Use MUI's `styled()` utility with object syntax, backed by Emotion, and wrap the App Router tree with MUI's `AppRouterCacheProvider`.
+- **Reasoning:** This is MUI's supported App Router integration, keeps style generation in the Emotion cache, and avoids a duplicate hand-rolled SSR registry. The styled factory lives in a client component because MUI v6 exposes it as a client boundary.
+
 ## 2. Pessimistic Locking over Optimistic Locking
 - **Context:** High-concurrency financial ledger updates on account balances.
 - **Decision:** Used `@Lock(LockModeType.PESSIMISTIC_WRITE)` (`SELECT FOR UPDATE`).

@@ -47,12 +47,23 @@ Completed in this workspace:
 
 > Verification note: the workspace has no Java/Maven toolchain available in this environment, so a real `mvn test` run could not be executed here. The editor reports no Java syntax errors in the generated files.
 
+### Task 7 — Frontend Boilerplate (Next.js + MUI styled + Emotion SSR)
+The frontend foundation is implemented under `frontend/` using the App Router. It includes:
+- Next.js 15 App Router layout with responsive MUI App Bar and navigation drawers
+- MUI v6 theme and accessibility-oriented components
+- MUI `styled()` object syntax for application-level styling
+- MUI `AppRouterCacheProvider` for server-side Emotion style collection and FOUC prevention
+- TanStack React Query v5 provider
+- Vitest + React Testing Library smoke test
+
 ---
 
 ## How to Build, Run, and Test
 
 ### Running the Backend
 ```bash
+cd backend
+
 # Compile and run all tests (Maven)
 ./mvnw clean test
 
@@ -62,9 +73,33 @@ Completed in this workspace:
 
 ### Running the Frontend
 ```bash
+cd frontend
+
 # Install dependencies
 npm install
 
-# Start the development server
+# Start the Next.js App Router development server
 npm run dev
+
+# Run the Vitest smoke test
+npm test
+```
+
+The frontend production build can be checked with `npm run build` from the `frontend/` directory.
+
+### Project layout
+```text
+backend/
+  pom.xml
+  src/main/java/com/bankmonitor/paymentgateway/
+  src/test/java/com/bankmonitor/paymentgateway/
+frontend/
+  package.json
+  src/app/
+    layout.tsx
+    page.tsx
+    providers.tsx
+    registry.tsx (compatibility alias for AppRouterCacheProvider)
+    theme.ts
+    layout.test.tsx
 ```
