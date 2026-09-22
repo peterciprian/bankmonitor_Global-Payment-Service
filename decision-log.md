@@ -21,6 +21,10 @@
 - **Decision:** Store the active idempotency UUID in page-owned React state, preserve it for retries and failures, and rotate it only after HTTP 201 success. Lock form inputs during mutation and expose explicit retry handling for network failures and 503 responses.
 - **Reasoning:** State makes the key lifecycle explicit and testable while ensuring re-renders do not change it. UI locking prevents duplicate submits, and explicit retry preserves the server's idempotency contract.
 
+### Task 10 implementation choice
+- **Decision:** Return transactions in a `{ data, pagination }` envelope and use MUI `Table` with `TablePagination` rather than `@mui/x-data-grid`.
+- **Reasoning:** Explicit server pagination metadata keeps the API contract ready for the real backend. The standard table is sufficient for the current ledger, preserves bundle size, and provides direct control over accessible responsive rendering.
+
 ## 2. Pessimistic Locking over Optimistic Locking
 - **Context:** High-concurrency financial ledger updates on account balances.
 - **Decision:** Used `@Lock(LockModeType.PESSIMISTIC_WRITE)` (`SELECT FOR UPDATE`).

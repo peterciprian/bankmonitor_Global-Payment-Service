@@ -17,6 +17,7 @@ import {
   Toolbar,
   Typography
 } from '@mui/material';
+import { usePathname } from 'next/navigation';
 import * as React from 'react';
 import { MainContent } from './MainContent';
 
@@ -32,12 +33,19 @@ type NavigationProps = {
   children: React.ReactNode;
 };
 
-function NavigationItems() {
+function NavigationItems({ onNavigate }: { onNavigate?: () => void }) {
+  const pathname = usePathname();
+
   return (
     <List aria-label="Primary navigation">
       {navItems.map(({ label, icon: Icon }) => (
         <ListItem key={label} disablePadding>
-          <ListItemButton selected={label === 'Accounts'} component="a" href={`/${label.toLowerCase()}`}>
+          <ListItemButton
+            selected={pathname === `/${label.toLowerCase()}`}
+            component="a"
+            href={`/${label.toLowerCase()}`}
+            onClick={onNavigate}
+          >
             <ListItemIcon>
               <Icon />
             </ListItemIcon>
@@ -60,7 +68,7 @@ export function Navigation({ children }: NavigationProps) {
             color="inherit"
             edge="start"
             aria-label="Open navigation"
-            onClick={() => setMobileOpen(true)}
+            onClick={() => setMobileOpen((prev) => !prev)}
             sx={{ mr: 2, display: { sm: 'none' } }}
           >
             <MenuIcon />
@@ -86,7 +94,7 @@ export function Navigation({ children }: NavigationProps) {
             ModalProps={{ keepMounted: true }}
             sx={{ display: { xs: 'block', sm: 'none' }, '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box', pt: 8 } }}
           >
-            <NavigationItems />
+            <NavigationItems onNavigate={() => setMobileOpen(false)} />
           </Drawer>
         </Box>
         <MainContent>

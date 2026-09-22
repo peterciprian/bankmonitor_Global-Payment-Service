@@ -1,6 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import RootLayout from './layout';
+
+vi.mock('next/navigation', () => ({
+  usePathname: () => '/transactions'
+}));
 
 describe('RootLayout', () => {
   it('renders the application shell and primary navigation', () => {
@@ -15,5 +19,6 @@ describe('RootLayout', () => {
     expect(screen.getAllByText('Transfer').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Transactions').length).toBeGreaterThan(0);
     expect(screen.getByText('Dashboard content')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Transactions' })).toHaveClass('Mui-selected');
   });
 });

@@ -154,4 +154,22 @@ Once I confirm, the scope of the implementation will cover:
 DOCUMENTATION UPDATE:
 Provide any necessary additions to #file:README.md regarding how to run the newly added Playwright E2E tests locally.
 
+7. Act as a Senior Next.js Fullstack Developer and Performance Engineer. We are ready to implement "Task 10: Transaction History Screen with Pagination + Visual Grid Component Tests" as specified in #file:backlog.md, adhering to #file:system-requirements.md and #file:testing-guidelines.md.
 
+CRITICAL ARCHITECTURAL REQUIREMENT:
+Since the Java Spring Boot backend is not yet ready, we MUST implement the complete server-side mock logic inside the Next.js Route Handler (`src/app/api/transactions/route.ts`). This mock endpoint must accurately imitate a real server by reading `page` and `limit` query parameters, slicing our in-memory global transactions array, and returning a structured JSON response containing the sliced data along with proper pagination metadata (e.g., totalItems, totalPages, currentPage).
+
+CRITICAL INSTRUCTION ON TECHNICAL DECISIONS:
+Before generating any implementation code, analyze the data grid performance and component choices. Stop and present your recommendations and tradeoffs for:
+1. Pagination Metadata Structure: How should our Next.js mock API structure its response to support efficient frontend grid paging? (e.g., wrapping the list in a `{ data: Transaction[], pagination: { total: number, page: number, limit: number } }` envelope).
+2. MUI Component Choice: Given our decision to avoid Tailwind and lean on MUI's robustness, should we use `@mui/material/Table` with a custom `TablePagination` (highly customizable styling via Styled Components) or the enterprise-grade `@mui/x-data-grid` (built-in virtualization, heavier bundle size)?
+Present the options and wait for my confirmation.
+
+Once I confirm, the scope of the implementation will cover:
+- `src/app/api/transactions/route.ts`: The Next.js server-side Route Handler (`GET`). It reads `?page=X&limit=Y`, fetches data from the global/globalThis store, slices it mathematically, and returns the envelope with metadata.
+- `src/hooks/useTransactions.ts`: TanStack React Query hook (`useTransactions`) that passes current `page` and `limit` state to the API, using `placeholderData: (previousData) => previousData` (keepPreviousData behavior) to prevent layout shifts.
+- `src/app/transactions/page.tsx`: The full ledger page using Material UI and Styled Components, displaying: Source Account, Target Account, Sent Amount, Received Amount (FX converted), and Locale-formatted Timestamp.
+- `src/app/transactions/page.test.tsx`: A Vitest + React Testing Library component test using MSW to mock 25 transactions, verifying that page 1 shows the first 10 items, and clicking 'Next' properly calls page 2 for items 11-20.
+
+DOCUMENTATION UPDATE:
+Verify if #file:README.md requires any updates regarding running or testing this final frontend + mock layer.

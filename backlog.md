@@ -9,7 +9,7 @@
 - [x] Task 7: Next.js 15 Boilerplate with MUI v6 & Styled Components + SSR Hydration Smoke Test
 - [x] Task 8: Accounts Dashboard Screen + Component Tests (MUI + MSW)
 - [x] Task 9: Transfer Screen with Idempotency Form + Playwright E2E Network Failure Test
-- [ ] Task 10: Transaction History Screen with Pagination + Visual Grid Component Tests
+- [x] Task 10: Transaction History Screen with Pagination + Visual Grid Component Tests
 
 ---
 

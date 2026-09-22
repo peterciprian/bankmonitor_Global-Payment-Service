@@ -104,6 +104,9 @@ npm run test:e2e
 ```
 The first Playwright run may require `npx playwright install chromium` to install the local browser.
 
+### Task 10 — Transaction History
+The transaction history screen is available at `/transactions`. It uses the mock `GET /api/transactions?page=1&limit=10` endpoint, which returns a `{ data, pagination }` envelope containing `totalItems`, `totalPages`, `currentPage`, and `pageSize`. The frontend uses a standard MUI `Table` with `TablePagination` and preserves the previous page while loading the next page.
+
 ### Next.js mock backend
 Until the Spring Boot backend is available, the frontend provides server-side App Router mock endpoints backed by a `globalThis` singleton:
 - `GET/POST /api/accounts`
@@ -134,7 +137,11 @@ frontend/
       page.test.tsx
       transfer/
         page.tsx
+      transactions/
+        page.tsx
+        page.test.tsx
       src/hooks/useTransfers.ts
+    src/hooks/useTransactions.ts
       src/__tests__/transfer.e2e.test.ts
   src/components/CreateAccountDialog.tsx
   src/hooks/useAccounts.ts

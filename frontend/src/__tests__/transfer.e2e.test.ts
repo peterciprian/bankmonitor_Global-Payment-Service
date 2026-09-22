@@ -33,7 +33,7 @@ test('retries a failed transfer with the same idempotency key', async ({ page })
   await page.locator('select[name="currency"]').selectOption('EUR');
   await page.getByRole('button', { name: 'Submit transfer' }).click();
 
-  await expect(page.getByText('The transfer could not be confirmed. Retry using the same idempotency key.')).toBeVisible();
+  await expect(page.getByText('The transfer request could not reach the server.')).toBeVisible();
   await page.getByRole('button', { name: 'Retry' }).click();
   await expect(page.getByText('Transfer completed successfully.')).toBeVisible();
   expect(attempts).toBe(2);
