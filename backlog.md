@@ -7,7 +7,7 @@
 - [ ] Task 5: Transactional Outbox Pattern implementation + Scheduler Integration Tests
 - [ ] Task 6: REST Controller & Idempotency Filter + WebMvc Spring Tests
 - [x] Task 7: Next.js 15 Boilerplate with MUI v6 & Styled Components + SSR Hydration Smoke Test
-- [ ] Task 8: Accounts Dashboard Screen + Component Tests (MUI + MSW)
+- [x] Task 8: Accounts Dashboard Screen + Component Tests (MUI + MSW)
 - [ ] Task 9: Transfer Screen with Idempotency Form + Playwright E2E Network Failure Test
 - [ ] Task 10: Transaction History Screen with Pagination + Visual Grid Component Tests
 

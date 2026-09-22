@@ -56,6 +56,14 @@ The frontend foundation is implemented under `frontend/` using the App Router. I
 - TanStack React Query v5 provider
 - Vitest + React Testing Library smoke test
 
+### Task 8 — Accounts Dashboard
+The accounts dashboard is implemented under `frontend/src/app/accounts/` with:
+- A responsive MUI `Table` for account data
+- `Skeleton` loading rows and an `Alert` error state
+- An accessible create-account dialog using React Hook Form and Zod
+- TanStack Query hooks using `userId` as the account identifier
+- MSW component tests covering account rendering and the create-account POST payload
+
 ---
 
 ## How to Build, Run, and Test
@@ -85,6 +93,16 @@ npm run dev
 npm test
 ```
 
+Task 8 uses `react-hook-form`, `zod`, `@hookform/resolvers`, and `msw`; these are installed in `frontend/package.json`. No additional environment variables are required.
+
+### Next.js mock backend
+Until the Spring Boot backend is available, the frontend provides server-side App Router mock endpoints backed by a `globalThis` singleton:
+- `GET/POST /api/accounts`
+- `POST /api/transfers` with strict `X-Idempotency-Key` handling
+- `GET /api/transactions?page=1&limit=10`
+
+The store starts with deterministic sample accounts and persists across normal development-mode HMR reloads. Its data resets when the Next.js process restarts. Same-currency transfers succeed; cross-currency transfers use a fixed 2-second delay and return HTTP 503 to make resilience behavior deterministic.
+
 The frontend production build can be checked with `npm run build` from the `frontend/` directory.
 
 ### Project layout
@@ -102,4 +120,9 @@ frontend/
     registry.tsx (compatibility alias for AppRouterCacheProvider)
     theme.ts
     layout.test.tsx
+    accounts/
+      page.tsx
+      page.test.tsx
+  src/components/CreateAccountDialog.tsx
+  src/hooks/useAccounts.ts
 ```

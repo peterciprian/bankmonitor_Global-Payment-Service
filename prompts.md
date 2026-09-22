@@ -5,16 +5,17 @@
 - #4 `A fejlesztést egy részletes, a fenti követelmények alapján felállított TODO lista elkészítésével kezdjük, majd ezeken fogunk végighaladni. Így mindegyik listaelemhez szükség lesz egy részletes parancsra, ami alaján az implementáció készül. (backlog.md)`
 - #5 `Írj dokumentációt teljeskörű vállalati szintű unit és e2e tesztelésre vonatkozó előírásokról és iránymutatásokról. (testing-guidelines.md), a backlogot dolgozd át úgy, hogy az imlementáció magába foglalja a tesztek megírását is, mind unit, integrációs éa e2e teszt szintjén.`
 - #6 `elfelejtettem mindenek előtt a projektstruktúrát kialakítani. Írj parancsot a copilot számára, ami alapján egy tiszta, professzionális monorepo struktúrába rendezi át a projektet.`
+- #7 `mivel még nincsen backend, szeretném, ha nextjs szerver oldalon meghívnánk az api/{oldalnak megfelelő path} végpontot a megfelelő metúdussal, ahol szimuláljuk a backend szolgáltatás válaszait.  ennek az elkészítésére kérek promptot`
 
 ### Github Copilot:
 1. You are a Staff Fullstack Engineer guiding me through building a production-ready Next-Gen Payment Gateway. 
 
 First, read and thoroughly analyze our source-of-truth files:
-1. #file:system-requirements.md
-2. #file:testing-guidelines.md (Strict test architecture rules)
-3. #file:backlog.md
-4. #file:decision-log.md
-5. #file:README.md
+1: #file:system-requirements.md
+2: #file:testing-guidelines.md (Strict test architecture rules)
+3: #file:backlog.md
+4: #file:decision-log.md
+5: #file:README.md
 
 Your task is to help me execute the project strictly step-by-step following the sequence in `backlog.md`. Do not skip ahead. 
 
@@ -25,11 +26,11 @@ In case of need for technical decision, always ask me, offer solutions, provide 
 2. Act as an expert Frontend Architect. We are shifting our development order to focus on the Frontend first.
 
 Before generating any code, read, analyze, and strictly follow these source-of-truth files:
-1. #file:system-requirements.md
-2. #file:testing-guidelines.md
-3. #file:backlog.md (Focus on "Task 7: Next.js + MUI + Styled Components Boilerplate & Hydration Test")
-4. #file:decision-log.md
-5. #file:README.md
+1: #file:system-requirements.md
+2: #file:testing-guidelines.md
+3: #file:backlog.md (Focus on "Task 7: Next.js + MUI + Styled Components Boilerplate & Hydration Test")
+4: #file:decision-log.md
+5: #file:README.md
 
 CRITICAL INSTRUCTION ON TECHNICAL DECISIONS:
 In case of need for any technical decision (e.g., directory structures, specific MUI setup variants, or state hydration approaches), DO NOT make assumptions. Always ask me first. Offer potential solutions, provide technical context, and explain the tradeoffs of each approach, then wait for my confirmation.
@@ -80,11 +81,55 @@ payment-gateway-workspace/
 ├── system-requirements.md
 ├── testing-guidelines.md
 ├── backlog.md
-├── architecture.md
+├── decision-log.md
 └── README.md                 <-- Root documentation
 
 INSTRUCTIONS FOR YOU (COPILOT):
-1. Review all files that have been created so far.
-2. Group them and explicitly tell me which file belongs to which path in the new structure (e.g., "Move file X to /backend/src/...").
-3. Update the local execution paths inside #file:README.md if needed to reflect that commands must be run inside the `/backend` or `/frontend` directories.
-4. Do not delete any code, just restructure it cleanly. Confirm you understand the structure before we continue with Task 8 execution.
+1: Review all files that have been created so far.
+2: Group them and explicitly tell me which file belongs to which path in the new structure (e.g., "Move file X to /backend/src/...").
+3 Update the local execution paths inside #file:README.md if needed to reflect that commands must be run inside the `/backend` or `/frontend` directories.
+4: Do not delete any code, just restructure it cleanly. Confirm you understand the structure before we continue with Task 8 execution.
+
+4. Act as a Senior Frontend Developer and UX Engineer. We are ready to implement "Task 8:  Accounts Dashboard Screen + Component Tests (MUI + MSW)" as specified in #file:backlog.md and following the rules in #file:system-requirements.md and #file:testing-guidelines.md.
+
+All code must be placed strictly within the `/frontend` directory layout established in our architecture.
+
+CRITICAL INSTRUCTION ON TECHNICAL DECISIONS:
+Before writing code, analyze the following architectural choices. Stop and present your recommendations, tradeoffs, and component choices for:
+1: MUI Table Component: Should we use a standard responsive `@mui/material/Table` (lightweight, flexible) or `@mui/x-data-grid` (feature-rich but larger bundle size) for displaying the accounts list?
+2: Form Validation: Should we use pure React state with custom validation or integrate a library like React Hook Form + Yup/Zod for the 'Create Account' dialog form?
+Present the options and wait for my decision.
+
+Once I give the green light, the scope of the implementation will cover:
+- `src/hooks/useAccounts.ts`: TanStack React Query hooks (`useAccounts` query and `useCreateAccount` mutation) communicating with `/api/accounts`.
+- `src/app/accounts/page.tsx`: The Next.js page displaying the accounts. It must use MUI Skeleton components during the loading state, show an elegant MUI Alert upon error, and render the verified data.
+- `src/components/CreateAccountDialog.tsx`: An accessible MUI Dialog modal containing a form (Account Number, Initial Balance, Currency dropdown [HUF, EUR, USD]).
+- `src/app/accounts/page.test.tsx`: A comprehensive Vitest + React Testing Library component test using MSW (Mock Service Worker) to mock the `/api/accounts` GET and POST endpoints. Test that data renders correctly and that submitting the dialog form triggers the correct API payload.
+
+DOCUMENTATION UPDATE:
+Ensure that any new environment variables or npm packages required (like MSW or validation libraries) are clearly documented as updates for #file:README.md.
+
+5. Act as a Senior Next.js Fullstack Developer. We want to implement a complete server-side mock backend layer within our Next.js application using App Router Route Handlers (`src/app/api/...`), since the Spring Boot backend is not yet developed.
+
+This mock layer must accurately simulate the behavior of the real backend, including data persistence in server memory, network delays, flaky external API behaviors (503s), and strict X-Idempotency-Key validation.
+
+CRITICAL INSTRUCTION ON TECHNICAL DECISIONS:
+Before writing code, analyze how we should manage the server-side state in Next.js development mode (since global variables can reset during Hot Module Replacement / HMR). Stop and present your recommendations and tradeoffs for:
+1. In-Memory Store: How to safely implement a global in-memory singleton (or using a `globalThis` cache) to store accounts, transactions, and active idempotency keys (`PROCESSING`, `SUCCESS`, `FAILED`) without losing data on code changes.
+2. Flaky FX API and Network Simulation: How to implement a controllable delay and random 503 error simulator for the cross-currency transfers to test our frontend resilience.
+Present the options and wait for my decision.
+
+Once I give the confirmation, the scope of the implementation will cover:
+- `src/app/api/accounts/route.ts`: 
+  - `GET`: Returns the list of accounts.
+  - `POST`: Simulates creating a new account (validates fields, generates a mock account number, adds to store).
+- `src/app/api/transfers/route.ts`:
+  - `POST`: Processes a transfer. It MUST read the `X-Idempotency-Key` header.
+    - If key is missing -> return 400 Bad Request.
+    - If key state is `PROCESSING` -> return 409 Conflict.
+    - If key state is `SUCCESS` -> return the cached 201 response payload immediately.
+    - If it's a new key -> set status to `PROCESSING`. If it's cross-currency, simulate a 2-second delay and a 20% chance of a 503 error (flaky FX). If it succeeds, debit/credit the accounts in memory, save the transaction, update the key to `SUCCESS`, and return 201 Created. If it fails, set key to `FAILED` and return 503.
+- `src/app/api/transactions/route.ts`:
+  - `GET`: Returns the list of executed transfers with support for basic pagination query parameters (`page`, `limit`).
+
+
