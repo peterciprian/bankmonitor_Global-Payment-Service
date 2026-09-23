@@ -6,7 +6,7 @@ export type Account = {
   id: number;
   userId: string;
   currency: Currency;
-  balance: string;
+  balance: number;
 };
 
 export type CreateAccountInput = {

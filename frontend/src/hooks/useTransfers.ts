@@ -14,8 +14,11 @@ export type CreateTransferInput = {
 };
 
 export type TransferResponse = TransferPayload & {
-  id: string;
-  status: 'COMPLETED';
+  id: number;
+  convertedAmount: number;
+  targetCurrency: Currency;
+  exchangeRate: number;
+  status: 'PENDING' | 'COMPLETED' | 'FAILED';
   createdAt: string;
 };
 

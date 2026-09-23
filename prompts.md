@@ -6,6 +6,7 @@
 - #5 `Írj dokumentációt teljeskörű vállalati szintű unit és e2e tesztelésre vonatkozó előírásokról és iránymutatásokról. (testing-guidelines.md), a backlogot dolgozd át úgy, hogy az imlementáció magába foglalja a tesztek megírását is, mind unit, integrációs éa e2e teszt szintjén.`
 - #6 `elfelejtettem mindenek előtt a projektstruktúrát kialakítani. Írj parancsot a copilot számára, ami alapján egy tiszta, professzionális monorepo struktúrába rendezi át a projektet.`
 - #7 `mivel még nincsen backend, szeretném, ha nextjs szerver oldalon meghívnánk az api/{oldalnak megfelelő path} végpontot a megfelelő metúdussal, ahol szimuláljuk a backend szolgáltatás válaszait.  ennek az elkészítésére kérek promptot`
+- * `Írd meg a következő backlog elem implementálásához a promptot a GitHub Copilot részére.`
 
 ### Github Copilot:
 1. You are a Staff Fullstack Engineer guiding me through building a production-ready Next-Gen Payment Gateway. 

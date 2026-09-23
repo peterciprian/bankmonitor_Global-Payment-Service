@@ -7,9 +7,9 @@ export type Transaction = {
   toAccountId: number;
   amount: number;
   currency: Currency;
-  convertedAmount?: number;
-  targetCurrency?: Currency;
-  exchangeRate?: number;
+  convertedAmount: number;
+  targetCurrency: Currency;
+  exchangeRate: number;
   createdAt: string;
 };
 

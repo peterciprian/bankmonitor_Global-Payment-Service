@@ -13,6 +13,9 @@ export type MockTransaction = {
   toAccountId: number;
   amount: number;
   currency: MockCurrency;
+  convertedAmount: number;
+  targetCurrency: MockCurrency;
+  exchangeRate: number;
   createdAt: string;
 };
 

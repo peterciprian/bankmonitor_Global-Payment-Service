@@ -47,6 +47,16 @@ Completed in this workspace:
 
 > Verification note: the workspace has no Java/Maven toolchain available in this environment, so a real `mvn test` run could not be executed here. The editor reports no Java syntax errors in the generated files.
 
+### Task 6 — Backend REST boundary
+The backend controller-first boundary is implemented under `backend/`:
+- `POST /api/transfers` with `X-Idempotency-Key` interception
+- `GET /api/accounts`
+- `GET /api/transactions?page=1&limit=10`
+- Bean-validated transfer DTOs and cached idempotency responses
+- `@WebMvcTest` coverage for missing keys, invalid payloads, `PROCESSING`, and cached `SUCCESS`
+
+The backend tests require Maven and Java 21. Maven is not installed in the current development environment, so they could not be executed here.
+
 ### Task 7 — Frontend Boilerplate (Next.js + MUI styled + Emotion SSR)
 The frontend foundation is implemented under `frontend/` using the App Router. It includes:
 - Next.js 15 App Router layout with responsive MUI App Bar and navigation drawers
@@ -63,6 +73,12 @@ The accounts dashboard is implemented under `frontend/src/app/accounts/` with:
 - An accessible create-account dialog using React Hook Form and Zod
 - TanStack Query hooks using `userId` as the account identifier
 - MSW component tests covering account rendering and the create-account POST payload
+
+### Task 9 — Transfer Screen
+The transfer screen is available at `/transfer`. It preserves one `X-Idempotency-Key` UUID across network failures, HTTP 503 responses, and retries, then rotates the key only after HTTP 201 success. Inputs lock during submission, conflicts show a warning, and retryable failures preserve the form and key.
+
+### Task 10 — Transaction History
+The transaction history screen is available at `/transactions`. It uses the mock `GET /api/transactions?page=1&limit=10` endpoint, which returns a `{ data, pagination }` envelope containing `totalItems`, `totalPages`, `currentPage`, and `pageSize`. The frontend uses a standard MUI `Table` with `TablePagination` and preserves the previous page while loading the next page.
 
 ---
 
@@ -93,32 +109,11 @@ npm run dev
 npm test
 ```
 
-### Task 6 — Backend REST boundary
-The backend controller-first boundary is implemented under `backend/`:
-- `POST /api/transfers` with `X-Idempotency-Key` interception
-- `GET /api/accounts`
-- `GET /api/transactions?page=1&limit=10`
-- Bean-validated transfer DTOs and cached idempotency responses
-- `@WebMvcTest` coverage for missing keys, invalid payloads, `PROCESSING`, and cached `SUCCESS`
-
-The backend tests require Maven and Java 21. Maven is not installed in the current development environment, so they could not be executed here.
-### Task 7 — Frontend Boilerplate
-The frontend boilerplate is implemented under `frontend/`.
-
-### Task 8 uses `react-hook-form`, `zod`, `@hookform/resolvers`, and `msw`; these are installed in `frontend/package.json`. No additional environment variables are required.
-
-### Task 9 — Transfer Screen
-The transfer screen is available at `/transfer`. It preserves one `X-Idempotency-Key` UUID across network failures, HTTP 503 responses, and retries, then rotates the key only after HTTP 201 success. Inputs lock during submission, conflicts show a warning, and retryable failures preserve the form and key.
-
 Run the Playwright E2E test from `frontend/`:
 ```bash
 npm run test:e2e
 ```
 The first Playwright run may require `npx playwright install chromium` to install the local browser.
-
-### Task 10 — Transaction History
-The transaction history screen is available at `/transactions`. It uses the mock `GET /api/transactions?page=1&limit=10` endpoint, which returns a `{ data, pagination }` envelope containing `totalItems`, `totalPages`, `currentPage`, and `pageSize`. The frontend uses a standard MUI `Table` with `TablePagination` and preserves the previous page while loading the next page.
-
 
 ### Next.js mock backend
 Until the Spring Boot backend is available, the frontend provides server-side App Router mock endpoints backed by a `globalThis` singleton:
